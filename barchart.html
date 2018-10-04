@@ -141,10 +141,118 @@
         var years = data.data.map(function(item){
             var quarter;
 
-            var temp = item[0].substring(5,7);//get the year
+            var temp = item[0].substring(5,7);//19xx-'xx'-xx
+            if(temp ==='01'){
+                quarter = 'q1';
+            }else if(temp==='04'){
+                quarter = 'q2';
+            }
+            else if(temp ==='07'){
+                quarter = 'q3';
+            }
+            else if(quarter==='10'){
+                quarter = 'q4';
+            }
+            return item[0].substring(0,4) +" "+quarter;//19xx + " " +q1;
         })
-        
 
+        var yearsDigits = years.map(function (item){
+            return item.substring(0,4);//'19xx';
+        })
+
+        var xScale = d3.scaleLinear()
+                       .domain([d3.min(yearsDigits),d3.max(yearsDigits)])
+                       .range([0,width]);
+        
+        var xAxis = d3.axisBottom()
+                      .scale(xScale)
+                      .tickFormat(d3.format("d"));
+        //draw xaxis with tick
+        var xAxisGroup = svgContainer.append("g")
+                                     .call(xAxis)
+                                     .attr("id","x-axis")
+                                     .attr("transform","translate(60,400)")
+
+        var GDP = data.data.map(function(item){
+            return item[1];// return gdp num
+        });
+        
+        var scaleGDP = [];
+        var gdpMin = d3.min(GDP);
+        var gdpMax = d3.max(GDP);
+
+        var linearScale = d3.scaleLinear()
+                            .domain([gdpMin,gdpMax])
+                            .range([gdpMin/gdpMax*height,height]);
+        
+        scaleGDP = GDP.map(function(item){
+            return linearScale(item);
+        })
+
+        var yAxisScale = d3.scaleLinear()
+                           .domain([gdpMin,gdpMax])
+                           .range([height,gdpMin/gdpMax*height]);
+        
+        var yAxis = d3.axisLeft(yAxisScale);
+
+        var yAxisGroup = svgContainer.append('g')
+                                     .call(yAxis)
+                                     .attr("id","y-axis")
+                                     .attr("transform","translate(60,0)");
+        
+        //make rect
+
+        d3.select('svg').selectAll('rect')
+          .data(scaleGDP)
+          .enter()
+          .append('rect')
+          .attr('data-date',function(d,i){
+              return data.data[i][0];//return '19xx-xx-xx';
+          })
+          .attr('data-gdp',function(d,i){
+              return data.data[i][1];//return gdp num
+          })
+          .attr('class','bar')
+          .attr('x',function(d,i){
+              return i*barWidth;
+          })
+          .attr('y',function(d,i){
+              return height-d;
+          })
+          .attr('width',barWidth)
+          .attr('height',function(d){
+              return d;
+          })
+          .style("fill","#33adff")
+          .attr('transform','translate(60,0)')
+          .on('mouseover',function(d,i){
+              overlay.transition()
+                     .duration(100)
+                     .style('width',barWidth+'px')
+                     .style('height',d+'px')
+                     .style('opacity',.9)
+                     .style('left',i*barWidth +0 +'px')
+                     .style('top',height-d+'px')
+                     .style('transform','translateX(60px)');
+              tooltip.transition()
+                     .duration(100)
+                     .style('opacity',.9);
+              tooltip.html(years[i]+'<br>' +"$"+GDP[i].toFixed(1).replace(/(\d)(?=(\d{3})+\.)/g,"$1,")+'billion')
+                     .attr('data-date',data.data[i][0])
+                     .style('left',i*barWidth+30+'px')
+                     .style('top',height-100+'px')
+                     .style("transform","translateX(60px)")
+          })
+          .on('mouseout',function(d){
+              tooltip.transition()
+                     .duration(100)
+                     .style('opacity',0);
+              overlay.transition()
+                     .duration(100)
+                     .style('opacity',0);
+                     
+          })
+        
 
     });
     //# sourceURL=pen.js
