@@ -38,7 +38,12 @@
         stroke: #000;
         opacity: 0.8;
     }
-
+    .dot:hover{
+        stroke:lightsalmon;
+        stroke-width: 2px;
+        r:10px;
+        opacity:1;
+    }
     div.tooltip {
         position: absolute;
 
@@ -48,6 +53,17 @@
         border: 0px;
         border-radius: 8px;
         pointer-events: none;
+    }
+    div.tooltip::before{
+        content:"";
+        position:absolute;
+        border:10px solid transparent;
+        top:15px;
+        left:-15px;
+        width:0px;
+        height:0px;
+        border-left-color: lightsteelblue;
+        transform: rotate(180deg)
     }
 </style>
 
@@ -79,7 +95,7 @@
     range([0, height]);
 
     var color = d3.scaleOrdinal(d3.schemeCategory10);
-
+    
     var timeFormat = d3.timeFormat("%M:%S");
     var xAxis = d3.axisBottom(x).tickFormat(d3.format("d"));
 
@@ -168,19 +184,25 @@
             return d.Time.toISOString();
         }).
         style("fill", function (d) {
+            //console.log(color(d.Doping))
             return color(d.Doping != "");
         }).
         on("mouseover", function (d) {
+            
+            
+            
             div.style("opacity", .9);
             div.attr("data-year", d.Year);
             div.html(d.Name + ": " + d.Nationality + "<br/>" +
                 "Year: " + d.Year + ", Time: " + timeFormat(d.Time) + (
                     d.Doping ? "<br/><br/>" + d.Doping : "")).
-            style("left", d3.event.pageX + "px").
+            style("left", d3.event.pageX +10+ "px").
             style("top", d3.event.pageY - 28 + "px");
         }).
         on("mouseout", function (d) {
+            
             div.style("opacity", 0);
+            
         });
 
         //title
