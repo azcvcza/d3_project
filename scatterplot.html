@@ -49,7 +49,7 @@
     div.tooltip {
         position: absolute;
         left: -30px;
-        top:15px;
+        top: 15px;
         padding: 10px;
         font: 12px sans-serif;
         background: lightsteelblue;
@@ -71,6 +71,14 @@
     }
 
     .legend:hover {
+        width: 20px;
+        height: 20px;
+        background: lightblue;
+        transition-delay: .1s;
+        stroke: black;
+    }
+
+    .legend_hover {
         width: 20px;
         height: 20px;
         background: lightblue;
@@ -209,6 +217,9 @@
         attr("data-yvalue", function (d) {
             return d.Time.toISOString();
         }).
+        attr("name", function (d) {
+            return d.Nationality;
+        }).
         style("fill", function (d) {
             //console.log(color(d.Doping))
             return color(d.Nationality);
@@ -224,7 +235,7 @@
                 .style("stroke-dasharray", "2 2");
             svg.append("line")
                 .attr("x1", this.cx.baseVal.value)
-                .attr("y1", this.cy.baseVal.value+5)//尽量超出圆圈
+                .attr("y1", this.cy.baseVal.value + 5) //尽量超出圆圈
                 .attr("x2", this.cx.baseVal.value)
                 .attr("y2", height)
                 .style("stroke", "gray")
@@ -237,10 +248,22 @@
                     d.Doping ? "<br/><br/>" + d.Doping : "")).
             style("left", d3.event.pageX + 10 + "px").
             style("top", d3.event.pageY - 28 + "px");
+            //与rect联动
+            d3.select("rect[name=\"" + this.attributes.name.value + "\"]")
+                .attr("class", "legend_hover");
+            d3.select("text[name=\"" + this.attributes.name.value + "\"]")
+                .attr("class", "legend_hover");
         }).
         on("mouseout", function (d) {
+            //删除tooltip
             div.style("opacity", 0);
+            //删除定位线
             d3.selectAll("line").remove();
+            //更改rect样式
+            d3.select("rect[name=\"" + this.attributes.name.value + "\"]")
+                .attr("class", "legend");
+            d3.select("text[name=\"" + this.attributes.name.value + "\"]")
+                .attr("class", "legend");
         });
 
         //title
@@ -268,21 +291,21 @@
         attr("transform", function (d, i) {
             return "translate(0," + (height / 2 - i * 20) + ")";
         });
-        //todo: 增加dot 与控件的联动 1，dot悬浮时，legend rect同时放大，
+        //todo: 增加dot 与控件的联动 1，dot悬浮时，legend rect同时放大，//实现
         // 2,通过rect的点击来控制dot的显隐
         legend.append("rect").
         attr("x", width - 18).
         attr("width", 18).
         attr("height", 18).
         style("fill", color).
-        attr("name",function(d){
+        attr("name", function (d) {
             return d
         }).
-        attr("show","true")
-        .attr("class", "legend")//增加 class: legend 应用css样式
-        .on("click",function(d){
-            
-        });
+        attr("show", "true")
+            .attr("class", "legend") //增加 class: legend 应用css样式
+            .on("click", function (d) {
+                console.log(this.attributes.name.value)
+            });
 
 
 
@@ -290,6 +313,9 @@
         attr("x", width - 24).
         attr("y", 9).
         attr("dy", ".35em").
+        attr("name", function (d) {
+            return d
+        }).
         style("text-anchor", "end").
         text(function (d) {
             return d;
