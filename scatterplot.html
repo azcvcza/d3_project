@@ -46,7 +46,7 @@
     }
     div.tooltip {
         position: absolute;
-
+        left:-20px;
         padding: 10px;
         font: 12px sans-serif;
         background: lightsteelblue;
@@ -59,12 +59,20 @@
         position:absolute;
         border:10px solid transparent;
         top:15px;
-        left:-15px;
+        left:-20px;
         width:0px;
         height:0px;
         border-left-color: lightsteelblue;
         transform: rotate(180deg)
     }
+    .legend:hover{
+        width:20px;
+        height:20px;
+        background: lightblue;
+        transition-delay: .1s;
+        stroke: black;
+    }
+    
 </style>
 
 <body>
@@ -95,6 +103,19 @@
     range([0, height]);
 
     var color = d3.scaleOrdinal(d3.schemeCategory10);
+    var colors = {
+        "ITA":color("ITA"),
+        "USA":color("USA"),
+        "GER":color("GER"),
+        "ESP":color("ESP"),
+        "SUI":color("SUI"),
+        "DEN":color("DEN"),
+        "FRA":color("FRA"),
+        "POR":color("POR"),
+        "COL":color("COL"),
+        "UKR":color("UKR"),
+        "RUS":color("RUS"),
+    }
     
     var timeFormat = d3.timeFormat("%M:%S");
     var xAxis = d3.axisBottom(x).tickFormat(d3.format("d"));
@@ -118,6 +139,7 @@
 
     d3.json(url, function (error, data) {
         if (error) throw error;
+        console.table(data)
         data.forEach(function (d) {
             d.Place = +d.Place;
             var parsedTime = d.Time.split(':');
@@ -185,12 +207,10 @@
         }).
         style("fill", function (d) {
             //console.log(color(d.Doping))
-            return color(d.Doping != "");
+            
+            return color(d.Nationality);
         }).
         on("mouseover", function (d) {
-            
-            
-            
             div.style("opacity", .9);
             div.attr("data-year", d.Year);
             div.html(d.Name + ": " + d.Nationality + "<br/>" +
@@ -235,19 +255,18 @@
         attr("x", width - 18).
         attr("width", 18).
         attr("height", 18).
-        style("fill", color);
+        style("fill", color)
+        .attr("class","legend");
+        
+
 
         legend.append("text").
         attr("x", width - 24).
         attr("y", 9).
-        attr("dy", ".35em").
-        style("text-anchor", "end").
+        attr("dy", ".35em")
+        .style("text-anchor", "end").
         text(function (d) {
-            if (d) {
-                return "Riders with doping allegations";
-            } else {
-                return "No doping allegations";
-            };
+            return d;
         });
 
     });
