@@ -38,15 +38,17 @@
         stroke: #000;
         opacity: 0.8;
     }
-    .dot:hover{
-        stroke:lightsalmon;
+
+    .dot:hover {
+        stroke: lightsalmon;
         stroke-width: 2px;
-        r:10px;
-        opacity:1;
+        r: 10px;
+        opacity: 1;
     }
+
     div.tooltip {
         position: absolute;
-        left:-20px;
+        left: -20px;
         padding: 10px;
         font: 12px sans-serif;
         background: lightsteelblue;
@@ -54,25 +56,26 @@
         border-radius: 8px;
         pointer-events: none;
     }
-    div.tooltip::before{
-        content:"";
-        position:absolute;
-        border:10px solid transparent;
-        top:15px;
-        left:-20px;
-        width:0px;
-        height:0px;
+
+    div.tooltip::before {
+        content: "";
+        position: absolute;
+        border: 10px solid transparent;
+        top: 15px;
+        left: -20px;
+        width: 0px;
+        height: 0px;
         border-left-color: lightsteelblue;
         transform: rotate(180deg)
     }
-    .legend:hover{
-        width:20px;
-        height:20px;
+
+    .legend:hover {
+        width: 20px;
+        height: 20px;
         background: lightblue;
         transition-delay: .1s;
         stroke: black;
     }
-    
 </style>
 
 <body>
@@ -104,19 +107,19 @@
 
     var color = d3.scaleOrdinal(d3.schemeCategory10);
     var colors = {
-        "ITA":color("ITA"),
-        "USA":color("USA"),
-        "GER":color("GER"),
-        "ESP":color("ESP"),
-        "SUI":color("SUI"),
-        "DEN":color("DEN"),
-        "FRA":color("FRA"),
-        "POR":color("POR"),
-        "COL":color("COL"),
-        "UKR":color("UKR"),
-        "RUS":color("RUS"),
+        "ITA": color("ITA"),
+        "USA": color("USA"),
+        "GER": color("GER"),
+        "ESP": color("ESP"),
+        "SUI": color("SUI"),
+        "DEN": color("DEN"),
+        "FRA": color("FRA"),
+        "POR": color("POR"),
+        "COL": color("COL"),
+        "UKR": color("UKR"),
+        "RUS": color("RUS"),
     }
-    
+
     var timeFormat = d3.timeFormat("%M:%S");
     var xAxis = d3.axisBottom(x).tickFormat(d3.format("d"));
 
@@ -207,22 +210,37 @@
         }).
         style("fill", function (d) {
             //console.log(color(d.Doping))
-            
+
             return color(d.Nationality);
         }).
         on("mouseover", function (d) {
+            console.log(this.cx.baseVal.value, this.cy.baseVal.value)
+            svg.append("line")
+                .attr("x1", 0)
+                .attr("y1", this.cy.baseVal.value)
+                .attr("x2", this.cx.baseVal.value - 5)
+                .attr("y2", this.cy.baseVal.value)
+                .style("stroke", "gray")
+                .style("stroke-dasharray", "2 2");
+            svg.append("line")
+                .attr("x1", this.cx.baseVal.value)
+                .attr("y1", this.cy.baseVal.value)
+                .attr("x2", this.cx.baseVal.value)
+                .attr("y2", height)
+                .style("stroke", "gray")
+                .style("stroke-dasharray", "2 2");
             div.style("opacity", .9);
             div.attr("data-year", d.Year);
             div.html(d.Name + ": " + d.Nationality + "<br/>" +
                 "Year: " + d.Year + ", Time: " + timeFormat(d.Time) + (
                     d.Doping ? "<br/><br/>" + d.Doping : "")).
-            style("left", d3.event.pageX +10+ "px").
+            style("left", d3.event.pageX + 10 + "px").
             style("top", d3.event.pageY - 28 + "px");
         }).
         on("mouseout", function (d) {
-            
+
             div.style("opacity", 0);
-            
+            d3.selectAll("line").remove();
         });
 
         //title
@@ -256,15 +274,15 @@
         attr("width", 18).
         attr("height", 18).
         style("fill", color)
-        .attr("class","legend");
-        
+            .attr("class", "legend");
+
 
 
         legend.append("text").
         attr("x", width - 24).
         attr("y", 9).
         attr("dy", ".35em")
-        .style("text-anchor", "end").
+            .style("text-anchor", "end").
         text(function (d) {
             return d;
         });
