@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<script src="https://d3js.org/topojson.v2.min.js"></script>
+<script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/4.2.2/d3.min.js"></script>
+<style>
+    html,
+    body {
+        padding: 0;
+        margin: 0;
+    }
+
+    body {
+        display: flex;
+        justify-content: center;
+        font-family: 'Arial';
+    }
+
+    #main {
+        width: 1000px;
+        display: flex;
+        padding-top: 1rem;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .counties {
+        fill: none;
+    }
+
+    .states {
+        fill: none;
+        stroke: #fff;
+        stroke-linejoin: round;
+    }
+
+    div.tooltip {
+        position: absolute;
+        padding: 10px;
+        font: 12px Arial;
+        background: rgba(255, 255, 204, 0.9);
+        box-shadow: 1px 1px 10px rgba(128, 128, 128, 0.6);
+        border: 0px;
+        border-radius: 2px;
+        pointer-events: none;
+    }
+
+    #title {
+        font-size: 3.5rem;
+    }
+
+    #description {
+        text-align: center;
+    }
+
+    #source {
+        align-self: flex-end;
+        margin-top: 1rem;
+    }
+
+    a {
+        text-decoration: none;
+    }
+</style>
+
+<body>
+<svg width="960" height="600"></svg>
+</body>
+<script>    
+    var projectName = "choropleth";
+    localStorage.setItem("example_project","d3:choropolet");
+
+    var body = d3.select("body");
+    var svg = d3.select("svg");
+    var width = +svg.attr("width");
+    var height = +svg.attr("height");
+</script>
+</html>
