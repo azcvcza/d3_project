@@ -128,7 +128,7 @@
         "UKR": color("UKR"),
         "RUS": color("RUS"),
     }
-
+    var localdata = [];
     var timeFormat = d3.timeFormat("%M:%S");
     var xAxis = d3.axisBottom(x).tickFormat(d3.format("d"));
 
@@ -153,6 +153,7 @@
         if (error) throw error;
         console.table(data)
         data.forEach(function (d) {
+            localdata.push(d);
             d.Place = +d.Place;
             var parsedTime = d.Time.split(':');
             d.Time = new Date(Date.UTC(1970, 0, 1, 0, parsedTime[0], parsedTime[1]));
@@ -301,13 +302,25 @@
         attr("name", function (d) {
             return d
         }).
-        attr("show", "true")
-            .attr("class", "legend") //增加 class: legend 应用css样式
-            .on("click", function (d) {
-                console.log(this.attributes.name.value)
+        attr("show", "true").
+        attr("class", "legend") //增加 class: legend 应用css样式
+        .on("click", function (d) {
+                
+                if (this.attributes.show.value === "true") {
+                    this.attributes.show.value = false;
+                    d3.selectAll(".dot[name=\"" + this.attributes.name.value + "\"]")
+                        .style("opacity",0);
+                    d3.select("rect[name=\"" + this.attributes.name.value + "\"]")
+                        .style("fill", "gray");
+                } else {
+                    this.attributes.show.value = true;
+                    d3.selectAll(".dot[name=\"" + this.attributes.name.value + "\"]")
+                        .style("opacity",1);
+                    d3.select("rect[name=\"" + this.attributes.name.value + "\"]")
+                      .style("fill", color(this.attributes.name.value));
+                }
+
             });
-
-
 
         legend.append("text").
         attr("x", width - 24).
