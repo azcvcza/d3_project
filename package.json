@@ -1,0 +1,28 @@
+{
+    "name": "d3_project",
+    "version": "1.0.0",
+    "description": "d3 d3 d3 v4",
+    "main": "no",
+    "scripts": {
+        "test": "no"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/azcvcza/d3_project.git"
+    },
+    "keywords": [
+        "d3"
+    ],
+    "author": "azcvcza",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/azcvcza/d3_project/issues"
+    },
+    "dependencies": {
+        "d3": "4.x"
+    },
+    "devDependencies": {
+        "uglify-js": "2.x"
+    },
+    "homepage": "https://github.com/azcvcza/d3_project#readme"
+}
