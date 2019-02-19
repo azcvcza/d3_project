@@ -15,7 +15,7 @@
         <button onclick="renderAll(d3.axisBottom)">horizental bottom</button>
         <button onclick="renderAll(d3.axisTop)">h top</button>
         <button onclick="renderAll(d3.axisLeft)">vertical left</button>
-        <button onclick="renderAll(d3.axisRight)">x</button>
+        <button onclick="renderAll(d3.axisRight)">vertical right</button>
     </div>
 </body>
 <script>
@@ -47,7 +47,7 @@
         }
         createSvg();
         renderAxis(fn, d3.scaleLinear().domain([0, 1000]).range([0, axisWidth]), 2);
-        renderAxis(fn, d3.scaleTime().domain([new Date(2016, 0, 1), new Date(1017, 0, 1)]).range([0, axisWidth]), 3);
+        renderAxis(fn, d3.scaleTime().domain([new Date(2016, 0, 1), new Date(2017, 0, 1)]).range([0, axisWidth]), 6);
     }
 </script>
 
