@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" href="../style.css">
+    <script src="../node_modules/d3/build/d3.js"></script>
+</head>
+
+<body>
+
+</body>
+<script>
+    var body = d3.select("body");
+    var duration = 3000;
+    var div = body.append("div").classed("box", true).style("background-color", "steelblue").style("color", "white").text("waiting").transition().duration(duration).delay(1000).on("start", function() {
+        d3.select(this).text(function(d, i) {
+            return "transitioning";
+        })
+    }).on("end", function() {
+        d3.select(this).text(function(d, i) {
+            return "done";
+        })
+    }).style("margin-left", "600px");
+</script>
+
+</html>
