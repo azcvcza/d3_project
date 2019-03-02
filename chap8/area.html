@@ -43,6 +43,7 @@
                 defineBodyClip(_svg);
             }
             renderBody(_svg);
+            listen_hover();
         };
 
         function renderAxes(svg) {
@@ -69,6 +70,23 @@
                 .attr("y1", 0)
                 .attr("x2", 0)
                 .attr("y2", -quadrantHeight());
+        }
+
+        function listen_hover() {
+            d3.selectAll("circle")
+                .on("mouseenter", function() {
+                    //console.log("this", d3.select(this), "mouse enter")
+                    d3.select(this).attr("r", function() {
+                        //console.log("enter r:", d3.select(this).attr("r"));
+                        return d3.select(this).attr("r") * 2;
+                    })
+                })
+                .on("mouseleave", function() {
+                    //console.log("this", d3.select(this), "mouse leave");
+                    d3.select(this).attr("r", function() {
+                        return d3.select(this).attr("r") / 2;
+                    })
+                })
         }
 
         function renderYAxis(axesG) {
