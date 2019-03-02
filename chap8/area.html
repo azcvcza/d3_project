@@ -34,6 +34,7 @@
             _svg,
             _bodyG,
             _line;
+        //var drag = d3.drag().on("drag", move);
         _chart.render = function() {
             if (!_svg) {
                 _svg = d3.select("body").append("svg")
@@ -44,6 +45,7 @@
             }
             renderBody(_svg);
             listen_hover();
+            listen_drag();
         };
 
         function renderAxes(svg) {
@@ -51,6 +53,20 @@
                 .attr("class", "axes");
             renderXAxis(axesG);
             renderYAxis(axesG);
+        }
+
+        function renderXYLines(x, y, r) {
+            d3.selectAll("space-line").append("line")
+                .classed("line", true)
+                .attr("class", "space-line")
+                .attr("x1", 0)
+                .attr("y1", _height - y)
+                .attr("x2", x - r)
+                .attr("y2", _height - y)
+        }
+
+        function removeXYLines() {
+            d3.selectAll("space-line").remove();
         }
 
         function renderXAxis(axesG) {
@@ -79,7 +95,25 @@
                     d3.select(this).attr("r", function() {
                         //console.log("enter r:", d3.select(this).attr("r"));
                         return d3.select(this).attr("r") * 2;
-                    })
+                    });
+                    var circlex = d3.select(this).attr("cx");
+                    var circley = d3.select(this).attr("cy");
+                    var cr = d3.select(this).attr("r");
+                    _svg.append("line")
+                        .attr("x1", 0)
+                        .attr("y1", circley)
+                        .attr("x2", circlex)
+                        .attr("y2", circley)
+                        .style("stroke", "gray")
+                        .style("stroke-dasharray", "2 2");
+                    _svg.append("line")
+                        .attr("x1", this.cx.baseVal.value)
+                        .attr("y1", this.cy.baseVal.value - d3.select(this).attr("r")) //尽量超出圆圈
+                        .attr("x2", this.cx.baseVal.value)
+                        .attr("y2", _height)
+                        .style("stroke", "gray")
+                        .style("stroke-dasharray", "2 2");
+                    //renderXYLines(d3.select(this).attr("cx"), d3.select(this).attr("cy"), d3.select(this).attr("r"));
                 })
                 .on("mouseleave", function() {
                     //console.log("this", d3.select(this), "mouse leave");
@@ -87,6 +121,10 @@
                         return d3.select(this).attr("r") / 2;
                     })
                 })
+        }
+
+        function listen_drag() {
+
         }
 
         function renderYAxis(axesG) {
@@ -225,6 +263,8 @@
         function quadrantHeight() {
             return _height - _margins.top - _margins.bottom;
         }
+
+
         _chart.width = function(w) {
             if (!arguments.length) return _width;
             _width = w;
