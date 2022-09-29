@@ -19,7 +19,7 @@
         "url": "https://github.com/azcvcza/d3_project/issues"
     },
     "dependencies": {
-        "d3": "4.x"
+        "d3": "7.x"
     },
     "devDependencies": {
         "uglify-js": "2.x"
